@@ -24,10 +24,10 @@ jobs:
     - name: Build React App
       run: npm run build
 
-    - name: Archive Production Build
+    - name: Archive
       run: |
-        mkdir -p artifacts
-        zip -r artifacts/reactapp.zip build
+        mkdir artifacts
+        Compress-Archive -Path build\* -DestinationPath artifacts\reactapp.zip
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
