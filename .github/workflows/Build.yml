@@ -50,5 +50,3 @@ jobs:
         run: |
           Expand-Archive -Path deploy-folder/reactapp.zip -DestinationPath C:\Users\Public\Deploy\React_Deploy -Force
 
-      - name: Restart IIS
-        run: iisreset
