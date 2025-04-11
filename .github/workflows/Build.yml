@@ -50,11 +50,5 @@ jobs:
         run: |
           Expand-Archive -Path deploy-folder/reactapp.zip -DestinationPath C:\Users\Public\Deploy\React_Deploy -Force
 
-      - name: Set IIS Permissions (if needed)
-        run: |
-          $path = "C:\Users\Public\Deploy\React_Deploy"
-          $acl = Get-Acl $path
-          $permission = "IIS_IUSRS","FullControl","ContainerInherit, ObjectInherit","None","Allow"
-          $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
-          $acl.SetAccessRule($accessRule)
-          Set-Acl $path $acl
+      - name: Restart IIS
+        run: iisreset
