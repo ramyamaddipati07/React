@@ -35,19 +35,19 @@ jobs:
         name: reactapp
         path: artifacts/reactapp.zip
 
-  deploy:
-    runs-on: VM
-    needs: build
-    name: Deploy to Azure VM IIS
+  #deploy:
+  #  runs-on: VM
+  #  needs: build
+   # name: Deploy to Azure VM IIS
 
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: reactapp
-          path: deploy-folder
+  #  steps:
+  #    - name: Download Artifact
+   #     uses: actions/download-artifact@v4
+     #   with:
+      #    name: reactapp
+       #   path: deploy-folder
 
-      - name: Extract Zip
-        run: |
-          Expand-Archive -Path deploy-folder/reactapp.zip -DestinationPath C:\Users\Public\Deploy\React_Deploy -Force
+     # - name: Extract Zip
+   #     run: |
+     #     Expand-Archive -Path deploy-folder/reactapp.zip -DestinationPath C:\Users\Public\Deploy\React_Deploy -Force
 
