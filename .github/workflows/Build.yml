@@ -24,18 +24,22 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    - name: Prepare Analysis Configuration
+      shell: cmd
+      run: |
+        ${{ env.sonarscanner }} begin /k:"ramyam_react" /o:"ramyam" /v:"1.0" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/"
+      env:
+        sonarscanner: 'D:\Sonar_Qube\sonar_scanner\SonarScanner.MSBuild.exe'
+
     - name: Build React App
       run: npm run build
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2.2.0
-      with:
-        projectBaseDir: .
+    - name: Analysis
+      shell: cmd
+      run: |
+        ${{ env.sonarscanner }} /d:sonar.login="${{ secrets.SONAR_TOKEN }}" end
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_PROJECT_KEY: ramyam_react
-        SONAR_ORGANIZATION: ramyam
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        sonarscanner: 'D:\Sonar_Qube\sonar_scanner\SonarScanner.MSBuild.exe'
 
     - name: Archive
       run: |
