@@ -29,7 +29,7 @@ jobs:
       run: |
         ${{ env.sonarscanner }} begin /k:"ramyam_react" /o:"ramyam" /v:"1.0" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/"
       env:
-        sonarscanner: 'D:\Sonar_Qube\sonar_scanner\SonarScanner.MSBuild.exe'
+        sonarscanner: 'D:\Sonar_Qube\sonarscanner\SonarScanner.MSBuild.exe'
 
     - name: Build React App
       run: npm run build
@@ -39,7 +39,7 @@ jobs:
       run: |
         ${{ env.sonarscanner }} /d:sonar.login="${{ secrets.SONAR_TOKEN }}" end
       env:
-        sonarscanner: 'D:\Sonar_Qube\sonar_scanner\SonarScanner.MSBuild.exe'
+        sonarscanner: 'D:\Sonar_Qube\sonarscanner\SonarScanner.MSBuild.exe'
 
     - name: Archive
       run: |
