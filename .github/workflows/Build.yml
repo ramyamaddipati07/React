@@ -27,7 +27,7 @@ jobs:
 
    
     - name: Run SonarScanner
-      shell: pwsh
+      shell: cmd
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
