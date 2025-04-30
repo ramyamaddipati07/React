@@ -1,12 +1,14 @@
 name: React Build and Archive
 
 on:
+  workflow_dispatch:  
   push:
     branches:
       - main  # or your default branch
-      #- Dev
+      - Dev
+      - Feature-1
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" , "Dev" ]
 
 jobs:
   build:
@@ -23,8 +25,25 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+   
+    - name: Run SonarScanner
+      shell: powershell
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        & "D:\Sonar_Qube\sonarscanner\sonar-scanner-4.8.0.2856\bin\sonar-scanner.bat" `
+          -D"sonar.projectKey=ramyam_react" `
+          -D"sonar.organization=ramyam" `
+          -D"sonar.sources=." `
+          -D"sonar.host.url=https://sonarcloud.io" `
+          -D"sonar.login=$env:SONAR_TOKEN"
+
+
+            
+            
     - name: Build React App
       run: npm run build
+
 
     - name: Archive
       run: |
