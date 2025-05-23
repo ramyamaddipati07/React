@@ -1,0 +1,13 @@
+import React from 'react';
+interface ParaProps {
+    passedInText: string;
+}
+const Paragraph: React.FC<ParaProps> = React.memo(({ passedInText }) => {
+    return (
+        <div className="container">
+            {/* Ensure 'passedInText' is validated to prevent XSS if rendered using dangerouslySetInnerHTML in the future */}
+            <p>{passedInText}</p>
+        </div>
+    );
+});
+export default Paragraph;
