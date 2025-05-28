@@ -1,12 +1,6 @@
 name: React Build and Archive
 
 on:
-  workflow_dispatch:  
-  push:
-    branches:
-      - main  # or your default branch
-      - Dev
-      - Feature-1
   pull_request:
     branches: [ "main" , "Dev" ]
 
@@ -24,7 +18,6 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
-
    
     - name: Run SonarScanner
       shell: powershell
@@ -37,24 +30,15 @@ jobs:
           -D"sonar.sources=." `
           -D"sonar.host.url=https://sonarcloud.io" `
           -D"sonar.login=$env:SONAR_TOKEN"
-
-
-            
             
     - name: Build React App
       run: npm run build
-
-
+      
     - name: Archive
       run: |
         mkdir artifacts
         Compress-Archive -Path build\* -DestinationPath artifacts\reactapp.zip
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: reactapp
-        path: artifacts/reactapp.zip
 
   #deploy:
   #  runs-on: VM
