@@ -2,11 +2,11 @@ name: React Build and Archive
 
 on:
   workflow_dispatch:  
-  push:
-    branches:
-      - main  # or your default branch
-      - Dev
-      - Feature-1
+  #push:
+  #  branches:
+   #   - main  # or your default branch
+   #   - Dev
+   #   - Feature-1
   pull_request:
     branches: [ "main" , "Dev" ]
 
@@ -38,12 +38,8 @@ jobs:
           -D"sonar.host.url=https://sonarcloud.io" `
           -D"sonar.login=$env:SONAR_TOKEN"
 
-
-            
-            
     - name: Build React App
       run: npm run build
-
 
     - name: Archive
       run: |
