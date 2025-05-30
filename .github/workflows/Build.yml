@@ -1,14 +1,15 @@
 name: React Build and Archive
 
 on:
+
   workflow_dispatch:  
-  push:
-    branches:
-      - main  # or your default branch
+  #push:
+  #  branches:
+   #   - main  # or your default branch
    #   - Dev
    #   - Feature-1
-  #pull_request:
-   # branches: [ "main" , "Dev" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -26,34 +27,35 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-
-    - name: Run SonarScanner
-      shell: powershell
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        & "D:\Sonar_Qube\sonarscanner\sonar-scanner-4.8.0.2856\bin\sonar-scanner.bat" `
-          -D"sonar.projectKey=ramyam_react" `
-          -D"sonar.organization=ramyam" `
-          -D"sonar.sources=." `
-          -D"sonar.host.url=https://sonarcloud.io" `
-          -D"sonar.login=$env:SONAR_TOKEN"
+    #- name: Run SonarScanner
+     # shell: powershell
+     # env:
+     #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+     # run: |
+     #   & "D:\Sonar_Qube\sonarscanner\sonar-scanner-4.8.0.2856\bin\sonar-scanner.bat" `
+      #    -D"sonar.projectKey=ramyam_react" `
+      #    -D"sonar.organization=ramyam" `
+      #    -D"sonar.sources=." `
+       #   -D"sonar.host.url=https://sonarcloud.io" `
+       #   -D"sonar.login=$env:SONAR_TOKEN"
+            
+    - name: Build React App
+      run: npm run build
 
     - name: Build React App
       run: npm run build
 
-    - name: Archive
-      run: |
-        mkdir artifacts
-        Compress-Archive -Path build\* -DestinationPath artifacts\reactapp.zip
+   # - name: Archive
+    #  run: |
+   #     mkdir artifacts
+   #     Compress-Archive -Path build\* -DestinationPath artifacts\reactapp.zip
+   
+   # - name: Upload Artifact
+   #   uses: actions/upload-artifact@v4
+   #   with:
+   #     name: reactapp
+   #     path: artifacts/reactapp.zip
 
-
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: reactapp
-        path: artifacts/reactapp.zip
 
   #deploy:
   #  runs-on: VM
@@ -70,4 +72,35 @@ jobs:
      # - name: Extract Zip
    #     run: |
      #     Expand-Archive -Path deploy-folder/reactapp.zip -DestinationPath C:\Users\Public\Deploy\React_Deploy -Force
+
+  codeant_ci_scan:
+    name: Run CodeAnt CI scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch CodeAnt scan script
+        env:
+          API_BASE: https://6nqmq4lcrzge2g6ljxdost5nwm0icajd.lambda-url.ap-south-1.on.aws
+        run: |
+          curl -sS -X GET "${API_BASE}/analysis/ci/scan/script/get" \
+            --output start_scan.sh
+
+      - name: Make script executable
+        run: chmod +x start_scan.sh
+
+      - name: Trigger CodeAnt analysis
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}    # PAT or repo token
+          REPO_NAME:    ${{ github.repository }}       # e.g. org/repo
+          COMMIT_ID:    ${{ github.sha }}              # current commit SHA
+        run: |
+          bash start_scan.sh \
+            -a "$ACCESS_TOKEN" \
+            -r "$REPO_NAME" \
+            -c "$COMMIT_ID" \
+            -s github \
+            -i "" \
+            -e ""
 
